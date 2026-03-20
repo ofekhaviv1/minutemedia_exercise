@@ -1,0 +1,22 @@
+apache-airflow-providers-snowflake==6.1.0
+apache-airflow-providers-databricks==6.7.0
+apache-airflow-providers-amazon==7.3.0  # Add AWS provider
+apache-airflow-providers-tableau==4.5.2 
+apache-airflow-providers-google
+simple-salesforce==1.12.6 # Add this line
+boto3==1.34.131      # Compatible version for Airflow 2.6
+botocore==1.34.131
+apache-airflow-providers-mysql==5.6.2
+ 
+mysql-connector-python==9.0.0
+pymysql==1.1.0
+requests==2.31.0
+jsonpath-ng==1.6.1
+
+mysqlclient==2.2.4
+apache-airflow-providers-slack==8.7.1
+aiohttp-retry==2.9.1
+async-simple-salesforce==1.12.6a4
+snowflake-connector-python[pandas]
+pandas
+requests
