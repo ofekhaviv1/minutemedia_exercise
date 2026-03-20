@@ -30,7 +30,7 @@
 ## 🏗️ Architecture & Orchestration
 
 <p align="center">
-  <img src="include/references/screen-recording.gif" width="900" alt="Airflow DAG — Model_consolidated_revenue_hourly" />
+  <img src="include/images/screen-recording.gif" width="900" alt="Airflow DAG — Model_consolidated_revenue_hourly" />
 </p>
 <p align="center"><em>Airflow DAG: five parallel sub-pipelines converging into a sequential merge chain</em></p>
 
@@ -103,7 +103,7 @@ The **base layer** for all first-party traffic — both Owned-and-Operated (O&O)
 - **UPSERT** strategy: inserts new grain combinations on first arrival; updates on reruns
 
 <p align="center">
-  <img src="include/references/event_stream_path.png" width="900" alt="events_stream pipeline — Airflow task graph" />
+  <img src="include/images/event_stream_path.png" width="900" alt="events_stream pipeline — Airflow task graph" />
 </p>
 
 ---
@@ -118,7 +118,7 @@ Reconciles actual **Google Ad Manager CPM** against the first-party event baseli
 - **UPDATE-only MERGE** — prevents ghost rows by enforcing that GAM revenue can only land where first-party events already exist
 
 <p align="center">
-  <img src="include/references/gam_process.png" width="900" alt="GAM pipeline — Airflow task graph" />
+  <img src="include/images/gam_process.png" width="900" alt="GAM pipeline — Airflow task graph" />
 </p>
 
 ---
@@ -132,7 +132,7 @@ Reconciles CPM for **non-GAM, non-MinuteSSP networks**: Magnite, Triplelift, Ind
 - **UPDATE-only MERGE** — ghost-row protection ensures revenue is only attributed to rows with existing first-party activity
 
 <p align="center">
-  <img src="include/references/demand_partner_path.png" width="900" alt="Demand Partners pipeline — Airflow task graph" />
+  <img src="include/images/demand_partner_path.png" width="900" alt="Demand Partners pipeline — Airflow task graph" />
 </p>
 
 ---
@@ -149,7 +149,7 @@ Adds **external supply-side platform activity** for inventory not tracked by fir
 - **UPSERT** strategy: these rows have no events_stream counterpart, so inserts are required
 
 <p align="center">
-  <img src="include/references/ssp_path.png" width="900" alt="SSP pipeline — Airflow task graph" />
+  <img src="include/images/ssp_path.png" width="900" alt="SSP pipeline — Airflow task graph" />
 </p>
 
 ---
@@ -163,7 +163,7 @@ Tracks revenue from external sites (like Yahoo or MSN) that show our content. Si
 - **UPSERT** strategy (no events_stream counterpart)
 
 <p align="center">
-  <img src="include/references/syndication_path.png" width="900" alt="Content Syndication pipeline — Airflow task graph" />
+  <img src="include/images/syndication_path.png" width="900" alt="Content Syndication pipeline — Airflow task graph" />
 </p>
 
 ---
@@ -366,7 +366,7 @@ CLUSTER BY organization_id, network, event, country;
 ## 🛡️ [Automated Data Validation](/dags/minute_media/Model_consolidated_revenue_hourly/dq) 📂
 
 <p align="center">
-  <img src="include/references/valiadate_ssot.png" width="900" alt="validate_ssot — final gate in the DAG merge chain" />
+  <img src="include/images/valiadate_ssot.png" width="900" alt="validate_ssot — final gate in the DAG merge chain" />
 </p>
 
 `validate_ssot` is the final gate in every DAG cycle — a `PythonOperator` that executes only after all five MERGE operations complete. It uses `BigQueryHook` to run SQL-based checks against BigQuery, each returning a structured result: `expected_value`, `actual_value`, and a boolean `passed` status.
@@ -385,7 +385,7 @@ CLUSTER BY organization_id, network, event, country;
 A run is trusted only when all blocking checks pass. Validation results are logged directly to the Airflow task output. In a production environment, this architecture is designed to trigger automated **Slack alerts** upon failure for rapid incident response.
 
 <p align="center">
-  <img src="include/references/ssot_validation_results.png" width="750" alt="SSOT Validation Results — 6 passed, 0 failed, 1 skipped (GAM time-gated)" />
+  <img src="include/images/ssot_validation_results.png" width="750" alt="SSOT Validation Results — 6 passed, 0 failed, 1 skipped (GAM time-gated)" />
 </p>
 <p align="center"><em>Sample validation output: 6 passed, 0 failed, 1 skipped (GAM pipeline time-gated out of this run)</em></p>
 
