@@ -1,5 +1,4 @@
 -- DQ check: GAM allocated revenue in SSOT should not exceed source revenue.
--- Small overallocation (< 0.1%) is tolerated due to float precision in proportional allocation.
 with stg as (
   select round(sum(total_gam_revenue), 4) as source_total
   from `minute-media-490214.minute_media_STG.GAM_grouping`
