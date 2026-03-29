@@ -7,8 +7,8 @@ with allocation_base as (
 
 select
   dwh.*,
-  g.total_ssp_impressions,
-  g.total_ssp_revenue_usd,
+  g.total_demand_partner_impressions,
+  g.total_demand_partner_revenue_usd,
   g.max_demand_partner_date,
   
   -- dynamic denominator: handles mixed granularity for the proportional weight calculation.
@@ -31,7 +31,7 @@ from `minute-media-490214.minute_media_STG.demand_partner_grouping` g
 left join `minute-media-490214.minute_media_DWH.dim_ad_unit_mapping` map
   on lower(g.network) = lower(map.partner_name)
   and lower(g.organization_id) = lower(map.property_code)
-  and lower(g.adunit) = lower(map.partner_ad_unit_name)
+  and lower(g.adunit) = lower(map.partner_ad_unit)
 
 -- 2. logic layer: connect the revenue with the actual dwh traffic
 join `minute-media-490214.minute_media_STG.demand_partner_last_data_dwh` dwh
@@ -73,12 +73,11 @@ select
      dbt insight: this null-safe proportional weight pattern is
      repeated across GAM and demand_partner pipelines.
      in dbt, extract as a macro:
-       {{ proportional_weight('tracked_event_count', 'total_tracked_for_group') }}
-     ========================================================= */
+      {# {{# proportional_weight('tracked_event_count', 'total_tracked_for_group')#}}     ========================================================= */
   coalesce(tracked_event_count / nullif(total_tracked_for_group, 0), 0) as weight,
 
   -- allocate ssp totals to hourly grain based on the calculated weight.
-  cast(round(total_ssp_impressions * coalesce(tracked_event_count / nullif(total_tracked_for_group, 0), 0)) as int64) as allocated_reconciled_event_count,
-  total_ssp_revenue_usd * coalesce(tracked_event_count / nullif(total_tracked_for_group, 0), 0) as allocated_actual_revenue
+  cast(round(total_demand_partner_impressions * coalesce(tracked_event_count / nullif(total_tracked_for_group, 0), 0)) as int64) as allocated_reconciled_event_count,
+  total_demand_partner_revenue_usd * coalesce(tracked_event_count / nullif(total_tracked_for_group, 0), 0) as allocated_actual_revenue
   
 from allocation_base

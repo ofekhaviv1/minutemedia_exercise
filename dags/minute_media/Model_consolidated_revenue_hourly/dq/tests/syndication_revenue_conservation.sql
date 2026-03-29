@@ -27,5 +27,5 @@ matched_total as (
 select
   cast(stg_total.total as string) as expected_value,
   cast(matched_total.total as string) as actual_value,
-  abs(coalesce(stg_total.total, 0) - coalesce(matched_total.total, 0)) < 0.01 as passed
+  abs(coalesce(stg_total.total, 0) - coalesce(matched_total.total, 0)) = 0 as passed
 from stg_total cross join matched_total

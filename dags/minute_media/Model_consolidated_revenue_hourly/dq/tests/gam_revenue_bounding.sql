@@ -19,5 +19,5 @@ ssot as (
 select
   cast(stg.source_total as string) as expected_value,
   cast(ssot.allocated_total as string) as actual_value,
-  coalesce(ssot.allocated_total, 0) <= coalesce(stg.source_total, 0) * 1.001 as passed
+  coalesce(ssot.allocated_total, 0) = coalesce(stg.source_total, 0) as passed
 from stg cross join ssot

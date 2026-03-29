@@ -9,8 +9,8 @@ select
   property_code as organization_id,            
   ad_unit as adunit,                           
   upper(geo) as country,                       
-  sum(impressions) as total_ssp_impressions,
-  sum(revenue_usd) as total_ssp_revenue_usd,
+  sum(impressions) as total_demand_partner_impressions,
+  sum(revenue_usd) as total_demand_partner_revenue_usd,
   max(max_demand_partner_date) as max_demand_partner_date
 
 from `minute-media-490214`.`minute_media_STG`.`demand_partner_pull_data`
